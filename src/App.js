@@ -1,25 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
+import './styles.css';
+import { useEffect, useReducer } from 'react';
+import TodoList from './components/TodoList';
+import todoReducer from './reducers/todoReducer';
 
-function App() {
+export default function App() {
+  const [todosState, dispatch] = useReducer(todoReducer, []);
+
+  useEffect(() => {
+    const savedTodos = localStorage.getItem('todos');
+    console.log(savedTodos);
+    if (savedTodos && savedTodos !== 'undefined' && savedTodos !== 'null') {
+      dispatch({ type: 'setTodos', payload: JSON.parse(savedTodos) });
+    }
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <TodoList todos={todosState} dispatch={dispatch} />
     </div>
   );
 }
-
-export default App;
